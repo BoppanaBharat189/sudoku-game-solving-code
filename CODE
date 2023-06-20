@@ -1,0 +1,92 @@
+#include<stdio.h>  
+int issafe(int row,int col,int digit,int mat[9][9])
+{
+    int i,j;
+    //entire row
+    for(j=0;j<=8;j++)
+    {
+        if(mat[row][j]==digit)
+        {
+            return 0;
+        }
+    }
+    //entire col
+    for(j=0;j<=8;j++)
+    {
+        if(mat[j][col]==digit)
+        {
+            return 0;
+        }
+    }
+    //entire subgrid
+    int s_row=row/3*3;
+    int s_col=col/3*3;
+    for(i=s_row;i<=s_row+2;i++)
+    {
+        for(j=s_col;j<=s_col+2;j++)
+        {
+           if(mat[i][j]==digit)
+           {
+               return 0;
+           }
+        }
+    }
+    return 1;
+}
+void display(int mat[9][9])
+{
+    int i,j;
+    for(i=0;i<9;i++)
+    {
+        for(j=0;j<9;j++)
+        {
+            printf("%d ",mat[i][j]);
+        }
+        printf("\n");
+    }    
+}
+void solve(int row,int col,int mat[9][9])
+{ // row=0 col=0
+    if(row==8&&col==9)
+    {
+        display(mat);
+    }
+    else
+    {
+        if(col==9)
+        {
+            row++;
+            col=0;
+        }
+       if(mat[row][col]==0) //row=0 col=2
+       {
+         for(int digit=1;digit<=9;digit++) //digit=1,2,3,4,5,6,7,8,9  
+         {
+            if(issafe(row,col,digit,mat)==1)
+            {
+                mat[row][col]=digit;
+                solve(row,col+1,mat);
+                mat[row][col]=0; //bactracking
+            }
+         }
+       }
+       else
+       {
+           solve(row,col+1,mat);
+       }
+    }
+}
+int main()
+{
+    int mat[9][9];
+    int i,j;
+    for(i=0;i<9;i++)
+    {
+        for(j=0;j<9;j++)
+        {
+            scanf("%d",&mat[i][j]);
+        }
+    }
+    printf("\n");
+    solve(0,0,mat); //fc
+}
